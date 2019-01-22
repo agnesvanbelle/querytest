@@ -9,6 +9,15 @@
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
 
+
+// TODO:
+// remove Java library stuff
+
+// put everything in folder called "elasticsearch"
+// remove xml file
+// remove sesqpan layer
+// // result shoudl be: elasticsearch/lucene-custom-query.jar & elasticsearch/plugin-descriptor.properties, zipped
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
