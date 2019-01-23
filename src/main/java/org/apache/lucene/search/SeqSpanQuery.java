@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -44,8 +44,8 @@ public class SeqSpanQuery extends Query {
   }
 
   @Override
-  public Weight createWeight(IndexSearcher searcher, boolean needsScores) throws IOException {
-    return new SeqSpanWeight(this, searcher);
+  public Weight createWeight(IndexSearcher searcher, boolean needsScores, float boost) throws IOException {
+    return new SeqSpanWeight(this, searcher, boost);
   }
 
   @Override

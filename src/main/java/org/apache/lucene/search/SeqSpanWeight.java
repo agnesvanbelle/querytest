@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.IndexReaderContext;
 import org.apache.lucene.index.LeafReader;
@@ -30,8 +30,9 @@ public class SeqSpanWeight extends Weight {
   private final int[] positions;
   private final SeqSpanQuery selfQuery;
   private final String field;
-
-  protected SeqSpanWeight(SeqSpanQuery query, IndexSearcher searcher) throws IOException {
+  public final float boost;
+  
+  protected SeqSpanWeight(SeqSpanQuery query, IndexSearcher searcher, float boost) throws IOException {
     super(query);
     this.selfQuery = query;
     this.similarity = searcher.getSimilarity(needsScores);
@@ -51,7 +52,8 @@ public class SeqSpanWeight extends Weight {
       states[i] = TermContext.build(context, term);
       termStats[i] = searcher.termStatistics(term, states[i]);
     }
-    stats = similarity.computeWeight(searcher.collectionStatistics(terms[0].field()), termStats);
+    this.boost = boost;
+    stats = similarity.computeWeight(boost, searcher.collectionStatistics(terms[0].field()), termStats);
   }
 
   @Override
@@ -64,15 +66,15 @@ public class SeqSpanWeight extends Weight {
     return Explanation.noMatch("future");
   }
 
-  @Override
-  public float getValueForNormalization() throws IOException {
-    return stats.getValueForNormalization();
-  }
-
-  @Override
-  public void normalize(float norm, float boost) {
-    stats.normalize(norm, boost);
-  }
+//  @Override
+//  public float getValueForNormalization() throws IOException {
+//    return stats.getValueForNormalization();
+//  }
+//
+//  @Override
+//  public void normalize(float norm, float boost) {
+//    stats.normalize(norm, boost);
+//  }
 
   @Override
   public Scorer scorer(LeafReaderContext context) throws IOException {
@@ -118,4 +120,11 @@ public class SeqSpanWeight extends Weight {
   public int getMaxSpan() {
     return selfQuery.getMaxSpan();
   }
+
+@Override
+public boolean isCacheable(LeafReaderContext ctx) {
+	// TODO check
+	// https://lucene.apache.org/core/7_2_1/core/org/apache/lucene/search/SegmentCacheable.html#isCacheable-org.apache.lucene.index.LeafReaderContext-
+	return false;
+}
 }

@@ -10,9 +10,9 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queries.SeqSpanQuery;
-import org.apache.lucene.queries.plugins.SeqSpanQueryBuilder;
-import org.apache.lucene.queries.plugins.SeqSpanQueryParser;
+import org.apache.lucene.search.SeqSpanQuery;
+import org.apache.lucene.search.plugins.SeqSpanQueryBuilder;
+import org.apache.lucene.search.plugins.SeqSpanQueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
@@ -25,7 +25,6 @@ import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.common.xcontent.json.JsonXContentParser;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryParseContext;
 import org.junit.Test;
 
 import java.io.File;
@@ -138,9 +137,8 @@ public class LibraryTest {
             + "}";
 
         XContentParser parser = JsonXContent.jsonXContent.createParser(null, json);
-        QueryParseContext queryParseContext = new QueryParseContext(parser);
 
-        SeqSpanQueryBuilder seqSpanQueryBuilder = new SeqSpanQueryParser().fromXContent(queryParseContext).orElse(null);
+        SeqSpanQueryBuilder seqSpanQueryBuilder = new SeqSpanQueryParser().fromXContent(parser);
         System.out.println(seqSpanQueryBuilder);
     }
 

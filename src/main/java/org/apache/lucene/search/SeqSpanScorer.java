@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.search.ConjunctionDISI;
@@ -84,10 +84,10 @@ public class SeqSpanScorer extends Scorer{
     return "ExactPhraseScorer(" + weight + ")";
   }
 
-  @Override
-  public int freq() {
-    return freq;
-  }
+//  @Override
+//  public int freq() {
+//    return freq;
+//  }
 
   @Override
   public int docID() {
@@ -95,7 +95,7 @@ public class SeqSpanScorer extends Scorer{
   }
 
   @Override
-  public float score() {
+  public float score() throws IOException {
     return docScorer.score(docID(), freq);
   }
 

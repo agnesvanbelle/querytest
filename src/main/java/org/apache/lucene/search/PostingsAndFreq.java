@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Term;

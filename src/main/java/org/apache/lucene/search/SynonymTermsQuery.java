@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -47,8 +47,8 @@ public class SynonymTermsQuery extends Query {
 	}
 
 	@Override
-	public Weight createWeight(IndexSearcher searcher, boolean needsScores) throws IOException {
-		return new SynonymTermsWeight(this, searcher);
+	public Weight createWeight(IndexSearcher searcher, boolean needsScores, float boost) throws IOException {
+		return new SynonymTermsWeight(this, searcher, boost);
 	}
 
 	@Override

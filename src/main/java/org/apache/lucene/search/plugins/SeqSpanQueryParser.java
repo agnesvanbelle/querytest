@@ -1,10 +1,9 @@
-package org.apache.lucene.queries.plugins;
+package org.apache.lucene.search.plugins;
 
-import org.apache.lucene.queries.SeqSpanQuery;
+import org.apache.lucene.search.SeqSpanQuery;
 import org.elasticsearch.common.ParsingException;
 import org.elasticsearch.common.xcontent.XContentLocation;
 import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.query.QueryParseContext;
 import org.elasticsearch.index.query.QueryParser;
 
 import java.io.IOException;
@@ -14,8 +13,7 @@ public class SeqSpanQueryParser implements QueryParser<SeqSpanQueryBuilder>{
 
 
   @Override
-  public Optional<SeqSpanQueryBuilder> fromXContent(QueryParseContext parseContext) throws IOException {
-    XContentParser parser = parseContext.parser();
+  public SeqSpanQueryBuilder fromXContent(XContentParser parser) throws IOException {
     SeqSpanQueryBuilder builder = new SeqSpanQueryBuilder();
 
     String currentFieldName = null;
@@ -48,7 +46,7 @@ public class SeqSpanQueryParser implements QueryParser<SeqSpanQueryBuilder>{
         }
       }
     }
-    return Optional.of(builder);
+    return builder;
   }
 
   private static void throwParsingExceptionOnMultipleFields(String queryName, XContentLocation contentLocation,
@@ -58,4 +56,5 @@ public class SeqSpanQueryParser implements QueryParser<SeqSpanQueryBuilder>{
           + processedFieldName + "] and [" + currentFieldName + "]");
     }
   }
+
 }

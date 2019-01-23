@@ -1,4 +1,4 @@
-package org.apache.lucene.queries.plugins;
+package org.apache.lucene.search.plugins;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.plugins.Plugin;
@@ -14,6 +14,6 @@ public class SeqSpanQueryPlugin extends Plugin implements SearchPlugin{
     SeqSpanQueryParser queryParser = new SeqSpanQueryParser();
     return Collections.singletonList(new QuerySpec<QueryBuilder>(SeqSpanQueryBuilder.NAME,
         SeqSpanQueryBuilder::new,
-        parseContext -> (Optional<QueryBuilder>) (Optional) queryParser.fromXContent(parseContext)));
+        parseContext ->  queryParser.fromXContent(parseContext)));
   }
 }

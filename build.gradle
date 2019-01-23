@@ -13,11 +13,6 @@ apply plugin: 'java-library'
 // TODO:
 // remove Java library stuff
 
-// put everything in folder called "elasticsearch"
-// remove xml file
-// remove sesqpan layer
-// // result shoudl be: elasticsearch/lucene-custom-query.jar & elasticsearch/plugin-descriptor.properties, zipped
-
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -33,11 +28,11 @@ dependencies {
     implementation 'com.google.guava:guava:21.0'
 
     // es
-    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '5.5.1'
+    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '6.2.4'
 
 
-    testCompile group: 'org.apache.lucene', name: 'lucene-test-framework', version: '6.6.0'
-    testCompile group: 'org.elasticsearch.test', name: 'framework', version: '5.5.1'
+    testCompile group: 'org.apache.lucene', name: 'lucene-test-framework', version: '7.2.1'
+    testCompile group: 'org.elasticsearch.test', name: 'framework', version: '6.2.4'
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
 
 

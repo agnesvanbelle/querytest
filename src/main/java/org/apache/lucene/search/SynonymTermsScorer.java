@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TwoPhaseIterator;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.search.similarities.Similarity.SimScorer;
+import org.apache.lucene.search.ExactPhraseScorer;
 
 public class SynonymTermsScorer extends Scorer {
 
@@ -72,19 +73,24 @@ public class SynonymTermsScorer extends Scorer {
 		return "SynonymTermsScorer(" + weight + ")";
 	}
 
-	@Override
-	public int freq() {
-		return freq;
-	}
+//	@Override
+//	public int freq() {
+//		return freq;
+//	}
 
 	@Override
 	public int docID() {
 		return mergedIterator.docID();
 	}
+	
+	private int reverseAsymptoticScore(float score, int offset ) {
+		return (int) Math.round((3 - offset * score) / (score - 1));
+	}
 
 	@Override
-	public float score() {
+	public float score() throws IOException {
 		int sumFreq = 0;
+		double sumScore = 0;
 		int i = 0;
 		for (Scorer s : scorers) {
 			int freq;
@@ -92,14 +98,15 @@ public class SynonymTermsScorer extends Scorer {
 				System.out.printf("scorer: %d is null\n", i++);
 			}
 			else {
-				try {
-					freq = s.freq();
-					System.out.printf("scorer: %d, freq: %d\n", i++, freq);
-					sumFreq += freq;
-				} catch (IOException e) {
-					System.err.println("Error getting freq of scorer");
-					e.printStackTrace();
-				}
+//				final TermScorer ts = (TermScorer)s;
+//				freq = ts.freq(); //TODO
+//				System.out.printf("scorer: %d, freq: %d\n", i++, freq);
+//				sumFreq += freq;
+				
+				final float thisScore = s.score();
+				final int thisFreq = reverseAsymptoticScore(thisScore, 4);
+				System.out.printf("scorer: %d, as..score: %2.4f, retrieved freq: %d\n", i++, thisScore, thisFreq);
+				sumFreq += thisFreq;
 			}
 		}
 		System.out.printf("sumFreq: %d\n", sumFreq);

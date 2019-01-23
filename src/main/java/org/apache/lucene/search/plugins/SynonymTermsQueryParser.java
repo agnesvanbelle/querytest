@@ -1,10 +1,9 @@
-package org.apache.lucene.queries.plugins;
+package org.apache.lucene.search.plugins;
 
-import org.apache.lucene.queries.SeqSpanQuery;
+import org.apache.lucene.search.SeqSpanQuery;
 import org.elasticsearch.common.ParsingException;
 import org.elasticsearch.common.xcontent.XContentLocation;
 import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.query.QueryParseContext;
 import org.elasticsearch.index.query.QueryParser;
 
 import java.io.IOException;
@@ -13,8 +12,7 @@ import java.util.Optional;
 public class SynonymTermsQueryParser implements QueryParser<SynonymTermsQueryBuilder> {
 
 	@Override
-	public Optional<SynonymTermsQueryBuilder> fromXContent(QueryParseContext parseContext) throws IOException {
-		XContentParser parser = parseContext.parser();
+	public SynonymTermsQueryBuilder fromXContent(XContentParser parser) throws IOException {
 		SynonymTermsQueryBuilder builder = new SynonymTermsQueryBuilder();
 
 		String currentFieldName = null;
@@ -37,7 +35,7 @@ public class SynonymTermsQueryParser implements QueryParser<SynonymTermsQueryBui
 				}
 			}
 		}
-		return Optional.of(builder);
+		return builder;
 	}
 
 //	private static void throwParsingExceptionOnMultipleFields(String queryName, XContentLocation contentLocation, String processedFieldName,

@@ -1,4 +1,4 @@
-package org.apache.lucene.queries;
+package org.apache.lucene.search;
 
 import org.apache.lucene.index.IndexReaderContext;
 import org.apache.lucene.index.LeafReader;
@@ -36,7 +36,7 @@ public class SynonymTermsWeight extends Weight {
 
   public final List<Weight> weights;
   
-  protected SynonymTermsWeight(SynonymTermsQuery query, IndexSearcher searcher) throws IOException {
+  protected SynonymTermsWeight(SynonymTermsQuery query, IndexSearcher searcher, float boost) throws IOException {
     super(query);
     this.selfQuery = query;
     this.similarity = searcher.getSimilarity(needsScores);
@@ -47,7 +47,7 @@ public class SynonymTermsWeight extends Weight {
     int j = 0;
     for (TermQuery subQuery : this.selfQuery.termQueries) {
     	  System.out.printf("SynonymTermsWeight contructor: subQuery %d, representation:%s\n", j++, subQuery.getTerm().toString());
-		  weights.add(subQuery.createWeight(searcher, true));
+		  weights.add(subQuery.createWeight(searcher, true, boost));
 	  }
     
     
@@ -61,7 +61,7 @@ public class SynonymTermsWeight extends Weight {
       termStats[i] = searcher.termStatistics(term, states[i]);
     }
     // last 2 parameters not necessary for asymptoticsimilarity
-    stats = similarity.computeWeight(searcher.collectionStatistics(terms[0].field()), termStats);
+    stats = similarity.computeWeight(boost, searcher.collectionStatistics(terms[0].field()), termStats);
   }
 
   @Override
@@ -74,15 +74,15 @@ public class SynonymTermsWeight extends Weight {
     return Explanation.noMatch("future");
   }
 
-  @Override
-  public float getValueForNormalization() throws IOException {
-    return stats.getValueForNormalization();
-  }
-
-  @Override
-  public void normalize(float norm, float boost) {
-    stats.normalize(norm, boost);
-  }
+//  @Override
+//  public float getValueForNormalization() throws IOException {
+//    return stats.getValueForNormalization();
+//  }
+//
+//  @Override
+//  public void normalize(float norm, float boost) {
+//    stats.normalize(norm, boost);
+//  }
 
   @Override
   public Scorer scorer(LeafReaderContext context) throws IOException {
@@ -100,6 +100,11 @@ public class SynonymTermsWeight extends Weight {
   public Term[] getTerms() {
     return selfQuery.getTerms();
   }
+
+@Override
+public boolean isCacheable(LeafReaderContext ctx) {
+	return false;
+}
 
  
 }

@@ -1,9 +1,9 @@
-curl -XPUT "localhost:9200/myindex" -d '{ "settings" : {
-      "number_of_shards" : 1
-  }}'
+curl -XDELETE "localhost:9200/myindex"
+
+curl -H 'Content-Type: application/json' -XPUT "localhost:9200/myindex" -d '{ "settings" : { "number_of_shards" : 1  }}'
 
 
-curl -XPUT "http://localhost:9200/myindex/fulltext/_mapping" -d ' {
+curl  -H 'Content-Type: application/json' -XPUT "http://localhost:9200/myindex/fulltext/_mapping" -d ' {
       "fulltext": {
                "_all": {
               "analyzer": "standard",
@@ -14,19 +14,35 @@ curl -XPUT "http://localhost:9200/myindex/fulltext/_mapping" -d ' {
           "properties": {
               "content": {
                   "type": "text",
-                  "store": "no",
+                  "store": "false",
                   "term_vector": "with_positions_offsets",
                   "analyzer": "standard",
                   "search_analyzer": "standard",
-                  "include_in_all": "true",
                   "boost": 8
               }
-          }
-      }
+          }    
+      }    
   }'
 
-curl -XPUT "localhost:9200/myindex/fulltext/1" -d '{"content":"a b c d e f"}'
 
-curl -XPUT "localhost:9200/myindex/fulltext/2" -d '    {"content":"b c d e f g"}'
+curl -H 'Content-Type: application/json'  -XPUT "localhost:9200/myindex/fulltext/1" -d '{"content":"a b c d e f"}'
 
-curl -XPUT "localhost:9200/myindex/fulltext/3" -d '    {"content":"a b b c g g g"}'
+curl -H 'Content-Type: application/json'  -XPUT "localhost:9200/myindex/fulltext/2" -d '    {"content":"b c d e f g"}'
+
+curl -H 'Content-Type: application/json'  -XPUT "localhost:9200/myindex/fulltext/3" -d '    {"content":"a b b c g g g"}'
+
+
+---
+
+
+curl -XGET "localhost:9200/myindex/_search?pretty" 
+
+
+curl -H 'Content-Type: application/json'  -XGET "localhost:9200/myindex/_search?pretty" -d '{           
+      "query": {
+        "synonym_terms": {
+          "field": "content",
+          "terms": "a b c"
+        }
+      }
+    }'

@@ -1,6 +1,6 @@
-package org.apache.lucene.queries.plugins;
+package org.apache.lucene.search.plugins;
 
-import org.apache.lucene.queries.SeqSpanQuery;
+import org.apache.lucene.search.SeqSpanQuery;
 import org.apache.lucene.search.Query;
 import org.elasticsearch.common.ParseField;
 import org.elasticsearch.common.io.stream.StreamInput;
