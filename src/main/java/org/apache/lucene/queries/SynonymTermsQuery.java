@@ -35,6 +35,9 @@ public class SynonymTermsQuery extends Query {
 			throw new IllegalStateException("We need terms");
 		}
 		this.inputtedTerms = Arrays.asList(terms);
+		
+		System.out.printf("SynonymTermsQuery constructor: inputtedTerms: %s\n", this.inputtedTerms);
+		
 		this.terms = toTerms(field, terms);
 		
 		termQueries = new ArrayList<>();
