@@ -1,0 +1,32 @@
+curl -XPUT "localhost:9200/myindex" -d '{ "settings" : {
+      "number_of_shards" : 1
+  }}'
+
+
+curl -XPUT "http://localhost:9200/myindex/fulltext/_mapping" -d ' {
+      "fulltext": {
+               "_all": {
+              "analyzer": "standard",
+              "search_analyzer": "standard",
+              "term_vector": "no",
+              "store": "false"
+          },
+          "properties": {
+              "content": {
+                  "type": "text",
+                  "store": "no",
+                  "term_vector": "with_positions_offsets",
+                  "analyzer": "standard",
+                  "search_analyzer": "standard",
+                  "include_in_all": "true",
+                  "boost": 8
+              }
+          }
+      }
+  }'
+
+curl -XPUT "localhost:9200/myindex/fulltext/1" -d '{"content":"a b c d e f"}'
+
+curl -XPUT "localhost:9200/myindex/fulltext/2" -d '    {"content":"b c d e f g"}'
+
+curl -XPUT "localhost:9200/myindex/fulltext/3" -d '    {"content":"a b b c g g g"}'
